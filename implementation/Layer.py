@@ -44,11 +44,25 @@ class Dropout:
     def __init__(self, dropout_rate):
         # 'keep' rate for the layer
         self.rate = 1 - dropout_rate
+        # for inference/prediction
+        self.inference_mode = False
     
     def forward(self, inputs):
         self.inputs = inputs
-        self.binary_mask = np.random.binomial(1, self.rate, size=inputs.shape) / self.rate
-        self.output = self.inputs * self.binary_mask
+        if not self.inference_mode:
+            self.binary_mask = np.random.binomial(1, self.rate, size=inputs.shape) / self.rate
+            self.output = self.inputs * self.binary_mask
+        else:
+            self.output = inputs
     
     def backward(self, dvalues):
-        self.dinputs = dvalues * self.binary_mask
+        if not self.inference_mode:
+            self.dinputs = dvalues * self.binary_mask
+        else:
+            self.dinputs = dvalues
+    
+    def train(self):
+        self.inference_mode = False
+    
+    def eval(self):
+        self.inference_mode = True
