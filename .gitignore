@@ -1,0 +1,12 @@
+anaconda_projects/
+__pycache__/
+.ipynb_checkpoints/
+venv/
+.venv/
+env/
+build/
+dist/
+*.tmp
+*.log
+.idea/
+.vscode/
